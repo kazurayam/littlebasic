@@ -1,9 +1,6 @@
 grammar LBExpression;
 import LBTokens;
 
-@header {
-package basic;
-}
 
 prog: stat+;
 

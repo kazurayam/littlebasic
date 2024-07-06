@@ -2,9 +2,6 @@
 
 package basic;
 
-
-    package basic;
-
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**

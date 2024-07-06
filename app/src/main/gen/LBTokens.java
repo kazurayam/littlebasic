@@ -1,7 +1,4 @@
 // Generated from /Users/kazuakiurayama/github/littlebasic/app/src/main/antlr/basic/LBTokens.g4 by ANTLR 4.13.1
-
-package basic;
-
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

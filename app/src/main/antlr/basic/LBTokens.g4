@@ -1,8 +1,5 @@
 lexer grammar LBTokens;
 
-@header {
-package basic;
-}
 
 // operators
 MUL : '*';
