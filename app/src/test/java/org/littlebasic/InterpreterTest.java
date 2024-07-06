@@ -17,7 +17,9 @@ import static org.testng.Assert.assertTrue;
 public class InterpreterTest {
 
     private static TestOutputOrganizer too =
-            new TestOutputOrganizer.Builder(InterpreterTest.class).build();
+            new TestOutputOrganizer.Builder(InterpreterTest.class)
+                    .subOutputDirectory(InterpreterTest.class)
+                    .build();
 
     @Test
     public void simplestCase() throws IOException {
@@ -25,14 +27,14 @@ public class InterpreterTest {
                 .resolve("src/test/fixtures/RunGCD.bas");
         assertTrue(Files.exists(bas));
         InputStream inputBas = newInputStream(bas);
-        Method thisMethod = Object.class.getEnclosingMethod();
-        Path methodOutputDir = too.cleanMethodOutputDirectory(thisMethod);
+        Path methodOutputDir = too.cleanMethodOutputDirectory("simplestCase");
         OutputStream stdout = newOutputStream(
                 methodOutputDir.resolve("stdout"));
         OutputStream stderr = newOutputStream(
                 methodOutputDir.resolve("stderr"));
+        InputStream stdin = newInputStream(bas);   // ?
 
-        Interpreter interpreter = new Interpreter(null, stdout, stderr);
+        Interpreter interpreter = new Interpreter(stdin, stdout, stderr);
         Value value = interpreter.run(inputBas);
     }
 }
