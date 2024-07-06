@@ -38,7 +38,8 @@ tasks.named('test') {
 }
 
 generateGrammarSource {
+    maxHeapSize = "64m"
     // -lib option is required so that the LBExpression grammar can import LBTokens grammar
     // without -lib, ANTLR4 will fail to find the LBTokens.g4 file
-    arguments << "-lib" << "src/main/antlr/basic"
+    arguments += ["-lib", "src/main/antlr/basic", "-visitor", "-long-messages"]
 }
