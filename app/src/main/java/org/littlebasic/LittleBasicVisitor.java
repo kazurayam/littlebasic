@@ -1,4 +1,7 @@
 package org.littlebasic;
 
-public class LittleBasicVisitor {
+import basic.LittleBasicBaseVisitor;
+import org.littlebasic.Value;
+
+public class LittleBasicVisitor extends LittleBasicBaseVisitor<Value> {
 }
