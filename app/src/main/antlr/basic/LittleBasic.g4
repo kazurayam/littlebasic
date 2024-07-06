@@ -1,10 +1,6 @@
 grammar LittleBasic;
 import LBExpression, LBTokens;
 
-@header {
-    package basic;
-}
-
 prog: block EOF;
 
 statement

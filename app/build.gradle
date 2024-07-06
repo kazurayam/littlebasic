@@ -19,9 +19,7 @@ dependencies {
     antlr "org.antlr:antlr4:4.5"
     // Use TestNG framework, also requires calling test.useTestNG() below
     testImplementation libs.testng
-
-    // This dependency is used by the application.
-    implementation libs.guava
+    testImplementation 'com.kazurayam:unittest-helper:0.5.0'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -41,5 +39,8 @@ generateGrammarSource {
     maxHeapSize = "64m"
     // -lib option is required so that the LBExpression grammar can import LBTokens grammar
     // without -lib, ANTLR4 will fail to find the LBTokens.g4 file
-    arguments += ["-lib", "src/main/antlr/basic", "-visitor", "-long-messages"]
+    arguments += ["-lib", "src/main/antlr/basic",
+                  "-package", "basic",
+                  "-visitor",
+                  "-long-messages"]
 }
