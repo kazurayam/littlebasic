@@ -16,6 +16,7 @@ repositories {
 }
 
 dependencies {
+    antlr "org.antlr:antlr4:4.5"
     // Use TestNG framework, also requires calling test.useTestNG() below
     testImplementation libs.testng
 
@@ -34,4 +35,10 @@ java {
 tasks.named('test') {
     // Use TestNG for unit tests.
     useTestNG()
+}
+
+generateGrammarSource {
+    // -lib option is required so that the LBExpression grammar can import LBTokens grammar
+    // without -lib, ANTLR4 will fail to find the LBTokens.g4 file
+    arguments << "-lib" << "src/main/antlr/basic"
 }
