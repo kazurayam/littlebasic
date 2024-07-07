@@ -19,7 +19,7 @@ dependencies {
     antlr "org.antlr:antlr4:4.5"
     // Use TestNG framework, also requires calling test.useTestNG() below
     testImplementation libs.testng
-    testImplementation 'com.kazurayam:unittest-helper:0.5.0'
+    implementation 'com.kazurayam:unittest-helper:0.5.0'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -43,4 +43,14 @@ generateGrammarSource {
                   "-package", "basic",
                   "-visitor",
                   "-long-messages"]
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'demo.App'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
