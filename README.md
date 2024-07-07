@@ -52,7 +52,7 @@ jarファイルができたらBASICインタープレターを実行する用意
 
 サンプルとしてのBASICプログラムがひとつzipの中に含まれている。
 
-- [littlebasic/app/src/test/fixtures/RunGCD.bas](https://github.com/kazurayam/littlebasic/blob/master/app/src/test/fixtures/RunGCD.bas)
+- [littlebasic/app/src/test/fixtures/runGCD.bas](https://github.com/kazurayam/littlebasic/blob/master/app/src/test/fixtures/runGCD.bas)
 
 ```
 REM Greatest common divisor
@@ -70,8 +70,7 @@ END
 PRINT "GCD=" + a
 ```
 
-このBASICプログラムを起動すると、変数Aに数値を指定してねと要求してくる。Aに数値を指定すると、続いて変数Bにも数値を指定してねと要求してくる。Bに数値を指定すると演算が実行され、Greatest Common Divisor
-すなわちAとBの最大公約数が表示される。
+このBASICプログラムを起動すると、変数Aに数値を指定せよと要求してくる。Aに数値を指定すると、続いて変数Bにも数値を指定せよと要求してくる。Bに数値を指定すると演算が実行され、Greatest Common Divisor すなわちAとBの最大公約数が表示される。
 
 ターミナルのウインドウで実際にどういう操作をすれば、どういう結果が返ってくるか、いくつか実例を示そう。
 
@@ -158,9 +157,7 @@ public class App {
 
 ## 疑問点と解消法
 
-今回、わたしが遭遇した疑問点とその解消法を説明しましょう。それは
-Gradleビルドファイル [app/build.gradle](https://github.com/kazurayam/littlebasic/blob/develop/app/build.gradle) のなかの
-次の記述に集約されています。
+今回、わたしが遭遇した疑問点とその解消法を説明しましょう。それはGradleビルドファイル [app/build.gradle](https://github.com/kazurayam/littlebasic/blob/develop/app/build.gradle) のなかの次の記述に集約されています。
 
 ```
 plugins {
@@ -305,7 +302,9 @@ ANTLRに`basic/LittleBasicBaseVisitor.java`ファイルを生成させたけれ�
 
 ## 結論
 
-ANTLRを使ってBASIC言語の処理系をJavaで作ることができました。わたしは次にVBAすなわちMicrosoft ExcelのVisual Basic for Applicationのソースコードを解析するプログラムをJavaで作ってみようと思う。Excel VBAで仕事していて困り果てたことが多々ある。VBAパーサとそれに基づく解析ツールを作れば解決できる課題もあると考えているから。さてどこまでできるやら。
+ANTLRを使ってBASIC言語の処理系をJavaで作ることができました。わたしは次にVBAすなわちMicrosoft ExcelのVisual Basic for Applicationのソースコードを解析するプログラムをJavaで作ってみようと思う。Excel VBAで仕事していて困り果てたことが多々ある。VBAパーサを作りそれを活用する解析ツールを開発すればわたしの困惑をきっと解消できるから。さてどこまでできるやら。
+
+
 
 
 
