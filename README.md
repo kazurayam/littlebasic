@@ -1,4 +1,4 @@
-# Basic言語のインタープレタをJavaで作る話
+# BASIC言語のインタープレタをJavaで作る話
 
 このweb記事を読んだ。
 
@@ -28,7 +28,7 @@ ANTLRがパーサのJavaコードを自動生成する。
 
 ## BASICインタープレターの動かし方
 
-わたしが開発したコード一式を下記URLで公開している。
+わたしが今回作ったコード一式を下記URLで公開している。
 
 - https://github.com/kazurayam/littlebasic
 
@@ -113,4 +113,199 @@ ANTLRに関してここでは説明しません。他の書籍やweb記事を参
 
 ### BASICインタープレターのJavaコード
 
-- []
+BASICインタープレターの入り口となるJavaクラスのソースは下記のようなものです。
+
+- [demo.App](https://github.com/kazurayam/littlebasic/blob/develop/app/src/main/java/demo/App.java)
+
+```
+package demo;
+
+import org.littlebasic.Interpreter;
+import org.littlebasic.Value;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static java.nio.file.Files.newInputStream;
+
+public class App {
+
+    public static void main(String[] args) throws IOException {
+        if (args.length == 0) {
+            throw new IllegalArgumentException(
+                    "Usage: java -jar app/build/libs/app.jar " +
+                            "app/src/test/fixtures/runGCD.bas");
+        }
+        Path bas = Paths.get(args[0]);
+        assert Files.exists(bas);
+        InputStream basicCode = newInputStream(bas);
+
+        // create the Interpreter instance
+        Interpreter interpreter =
+                new Interpreter(System.in, System.out, System.err);
+        //
+        Value value = interpreter.run(basicCode);
+    }
+}
+```
+
+見ての通り、`org.littlebasic.Interpreter`クラスの中にすべての秘密が隠されています。
+このコードも本家 [https://github.com/mateiw/littlebasic](https://github.com/mateiw/littlebasic/tree/master/src/main/java/org/littlebasic) が公開したものを
+そのまま拝借しました。
+
+## 疑問点と解消法
+
+今回、わたしが遭遇した疑問点とその解消法を説明しましょう。それは
+Gradleビルドファイル [app/build.gradle](https://github.com/kazurayam/littlebasic/blob/develop/app/build.gradle) のなかの
+次の記述に集約されています。
+
+```
+plugins {
+    id 'antlr'
+}
+...
+generateGrammarSource {
+    arguments += [
+            "-lib", "src/main/antlr/basic",
+            "-package", "basic",
+            "-visitor",
+            "-long-messages"]
+    maxHeapSize = "64m"
+}
+```
+
+Gradleプラグイン [antlr](https://docs.gradle.org/current/userguide/antlr_plugin.html) を使いました。
+このプラグインを適用すると `generateGrammarSource` タスクが追加されます。`generateGrammarSource`タスクが間接的にANTLRを実行して、文法記述ファイル `.g4` からJavaソース群を生成してくれます。
+
+### `-lib`オプションを指定する必要があった
+
+ものは試し、`build.gradle`ファイルをちょっと変更してみましょう。
+
+```
+generateGrammarSource {
+    arguments += [
+            /* "-lib", "src/main/antlr/basic", */
+            "-package", "basic",
+            ...
+```
+つまり`-lib`オプションを指定しなかったらどうなるか？を試してみよう。
+
+```
+$ cd ~/tmp/littlebasic
+$ gradle clean generateGrammarSource
+
+> Task :app:generateGrammarSource
+error(110): basic/LBExpression.g4:2:7: can't find or load grammar LBTokens
+...
+```
+
+エラーが発生しました。[`basic/LBExpression.g4`](https://github.com/kazurayam/littlebasic/blob/develop/app/src/main/antlr/basic/LBExpression.g4) ファイルの2行目で、`LBTokens`を探したが見つからなかった、と。ANTLRのドキュメント [ANTLR Tool Commandline Options](https://chromium.googlesource.com/external/github.com/antlr/antlr4/+/15720d1e33d7e03b2ca22f65f9260cfefae46505/doc/tool-options.md)の
+`-lib` オプションに関する説明を参照しましょう。
+
+>When looking for tokens files and imported grammars, ANTLR normally looks in the current directory. This option specifies which directory to look in instead.
+
+ANTLRが `base/LBExpression.g4` ファイルを処理しようとしたところ2行目に `import LBTokens;` と書いてあった。
+だからANTLRはLBTokensを探し出す必要があるのだが、LBTokensがどこのディレクトリにあるのか？もしも`-lib`オプションの指定が無ければANTLRはカレントディレクトリだけを探す。見つからなければエラーになる。このエラーを回避するには `-lib`オプションで `LBTokens.g4` が配置されたディレクトリのパスを指定する必要があった。
+
+### `-package`オプションを指定する必要があった
+
+ものは試し、`build.gradle`ファイルをちょっと変更してみましょう。
+
+```
+generateGrammarSource {
+    arguments += [
+            "-lib", "src/main/antlr/basic",
+            /* "-package", "basic", */
+            ...
+```
+つまり`-package`オプションを指定しなかったらどうなるか？を試してみよう。
+
+```
+$ gradle clean generateGrammarSource compileJava
+
+> Task :app:compileJava
+/Users/kazuakiurayama/github/littlebasic/app/src/main/java/org/littlebasic/LittleBasicVisitor.java:3: エラー: パッケージbasicは存在しません
+import basic.LBExpressionParser;
+            ^
+/Users/kazuakiurayama/github/littlebasic/app/src/main/java/org/littlebasic/LittleBasicVisitor.java:4: エラー: パッケージbasicは存在しません
+import basic.LittleBasicBaseVisitor;
+            ^
+/Users/kazuakiurayama/github/littlebasic/app/src/main/java/org/littlebasic/LittleBasicVisitor.java:5: エラー: パッケージbasicは存在しません
+import basic.LittleBasicParser;
+            ^
+...
+```
+
+ANTLRが文法からJavaコードを生成する処理は静かに完了したが、Javaコードをコンパイルするところで「パッケージbasicは存在しません」というエラーが大量に吐き出されました。なぜか？
+
+ANTLRが `app/build/generated-src/antlr/main/basic/LBExpressionParser.java`ファイルを生成していたので、そのソースコードの冒頭を見てみました。
+
+```
+// Generated from basic/LBExpression.g4 by ANTLR 4.5
+import org.antlr.v4.runtime.atn.*;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antl1.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
+import org.antlr.v4.runtime.tree.*;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
+
+@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
+public class LBExpressionParser extends Parser {
+    ...
+```
+
+本来ならば冒頭にパッケージ宣言文 `package basic;` があるべきだが、無い。ANTLRが生成した
+全ての `*.java` ファイルに同じ問題が発生してしまいました。
+
+ANTLRコマンドのオプション `-package ____` を指定することによってこの問題を解消することができました。
+
+### `-visitor`オプションを指定する必要があった
+
+ものは試し、`build.gradle`ファイルをちょっと変更してみましょう。
+
+```
+generateGrammarSource {
+    arguments += [
+            "-lib", "src/main/antlr/basic",
+            "-package", "basic",
+            /* "-visitor", */
+            ...
+```
+つまり`-visitor`オプションを指定しなかったらどうなるか？を試してみよう。
+
+```
+$ gradle clean generateGrammarSource compileJava
+
+> Task :app:compileJava FAILED
+/Users/kazuakiurayama/github/littlebasic/app/src/main/java/org/littlebasic/LittleBasicVisitor.java:4: エラー: シンボルを見つけられません
+import basic.LittleBasicBaseVisitor;
+            ^
+  シンボル:   クラス LittleBasicBaseVisitor
+  場所: パッケージ basic
+...
+```
+
+ANTLRが文法からJavaコードを生成する処理は静かに完了したが、Javaコードをコンパイルするところで「basic.LittleBasicBaseVisitorクラスが見つかりません」というエラーが吐き出されました。なぜか？
+
+ANTLRがJavaコードを生成したはずのディレクトリを覗いてみると確かに `basic/LittleBasicBaseVisitor.java` ファイルがありません。
+
+![https://kazurayam.github.io/littlebasic/images/generatedGrammarSource_without_visitor.png]
+
+公式ドキュメント [ANTLR Tool Command Line Options](https://chromium.googlesource.com/external/github.com/antlr/antlr4/+/15720d1e33d7e03b2ca22f65f9260cfefae46505/doc/tool-options.md) にこう書いてありました。
+
+>-visitor
+>ANTLR does not generate parse tree visitors by default. This option turns that feature on. ANTLR can generate both parse tree listeners and visitors; this option and -listener aren’t mutually exclusive.
+
+ANTLRに`basic/LittleBasicBaseVisitor.java`ファイルを生成させたければ `-visitor` オプションを明示的に指定する必要がある、のでした。
+
+## 結論
+
+ANTLRを使ってBASIC言語の処理系をJavaで作ることができました。わたしは次にVBAすなわちMicrosoft ExcelのVisual Basic for Applicationのソースコードを解析するプログラムをJavaで作ってみようと思う。Excel VBAで仕事していて困り果てることが色々あってなんとかしたいから自助ツールを作りたい。さてどこまでできるやら。
+
+
+
