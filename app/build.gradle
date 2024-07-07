@@ -36,13 +36,17 @@ tasks.named('test') {
 }
 
 generateGrammarSource {
+    arguments += [
+            // -lib option is required so that the LBExpression grammar can import LBTokens grammar.
+            // without -lib, ANTLR4 will fail to find the LBTokens.g4 file
+            "-lib", "src/main/antlr/basic",
+            // -package option is required so that the generated *.java files to have the "package basic;" statement
+            "-package", "basic",
+            // --visitor option is required to generate the "basic/LittleBasicBaseVisitor" class
+            "-visitor",
+            "-long-messages"]
     maxHeapSize = "64m"
-    // -lib option is required so that the LBExpression grammar can import LBTokens grammar
-    // without -lib, ANTLR4 will fail to find the LBTokens.g4 file
-    arguments += ["-lib", "src/main/antlr/basic",
-                  "-package", "basic",
-                  "-visitor",
-                  "-long-messages"]
+
 }
 
 jar {
