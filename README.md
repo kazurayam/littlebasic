@@ -305,7 +305,7 @@ ANTLRに`basic/LittleBasicBaseVisitor.java`ファイルを生成させたけれ�
 
 ## 結論
 
-ANTLRを使ってBASIC言語の処理系をJavaで作ることができました。わたしは次にVBAすなわちMicrosoft ExcelのVisual Basic for Applicationのソースコードを解析するプログラムをJavaで作ってみようと思う。Excel VBAで仕事していて困り果てたことが多々ある。VBAパーサとそれに基づく解析ツールを作れば良くなるかもしれないと思うから。さてどこまでできるやら。
+ANTLRを使ってBASIC言語の処理系をJavaで作ることができました。わたしは次にVBAすなわちMicrosoft ExcelのVisual Basic for Applicationのソースコードを解析するプログラムをJavaで作ってみようと思う。Excel VBAで仕事していて困り果てたことが多々ある。VBAパーサとそれに基づく解析ツールを作れば解決できる課題もあると考えているから。さてどこまでできるやら。
 
 
 
