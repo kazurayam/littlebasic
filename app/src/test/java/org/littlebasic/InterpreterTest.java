@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -24,7 +23,7 @@ public class InterpreterTest {
     @Test
     public void simplestCase() throws IOException {
         Path bas = too.getProjectDirectory()
-                .resolve("src/test/fixtures/RunGCD.bas");
+                .resolve("src/test/fixtures/runGCD.bas");
         assertTrue(Files.exists(bas));
         InputStream inputBas = newInputStream(bas);
         Path methodOutputDir = too.cleanMethodOutputDirectory("simplestCase");
