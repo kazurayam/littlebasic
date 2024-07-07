@@ -6,12 +6,12 @@
   https://mateiw.github.io/antlr-intro/)
 
 この記事は[BASIC](https://ja.wikipedia.org/wiki/BASIC)言語のインタープレターをJava言語で実装した事例である。
-Basic言語の文法をBNF記法で記述したファイルをパーサー・ジェネレータ[ANTLR](https://www.antlr.org/)に与える。
-ANTLRがパーサのJavaコードを自動生成する。
+BASIC言語の文法を記述したファイルをパーサー・ジェネレータ[ANTLR](https://www.antlr.org/)に与える。
+ANTLRがパーサを構成するJavaコードを生成する。
 自動生成されたコードを利用する形でインタープレタをJava言語で実装している。ビルドツールGradleを用いている。 
 
 わたしはこの記事が紹介するJavaコードを写経して動かしてみた。
-そのコードはよくできていて修正はほとんど不要だった。
+そのコードはよくできていてほとんど修正不要だった。
 しかし細かいところで問題がいくつかあった。
 わたしが見つけた解決方法を記述し公開しようと思う。
 
@@ -73,7 +73,7 @@ PRINT "GCD=" + a
 このBASICプログラムを起動すると、変数Aに数値を指定してねと要求してくる。Aに数値を指定すると、続いて変数Bにも数値を指定してねと要求してくる。Bに数値を指定すると演算が実行され、Greatest Common Divisor
 すなわちAとBの最大公約数が表示される。
 
-ターミナルのウインドウで実際にどういう操作をすれば、どういう結果が返ってくるか、いくつか例をしめそう。
+ターミナルのウインドウで実際にどういう操作をすれば、どういう結果が返ってくるか、いくつか実例を示そう。
 
 ```
 :~/tmp/littlebasic
@@ -294,7 +294,7 @@ ANTLRが文法からJavaコードを生成する処理は静かに完了した�
 
 ANTLRがJavaコードを生成したはずのディレクトリを覗いてみると確かに `basic/LittleBasicBaseVisitor.java` ファイルがありません。
 
-![https://kazurayam.github.io/littlebasic/images/generatedGrammarSource_without_visitor.png]
+![without-visitor](https://kazurayam.github.io/littlebasic/images/generatedGrammarSource_without_visitor.png]
 
 公式ドキュメント [ANTLR Tool Command Line Options](https://chromium.googlesource.com/external/github.com/antlr/antlr4/+/15720d1e33d7e03b2ca22f65f9260cfefae46505/doc/tool-options.md) にこう書いてありました。
 
