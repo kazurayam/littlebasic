@@ -294,7 +294,7 @@ ANTLRが文法からJavaコードを生成する処理は静かに完了した�
 
 ANTLRがJavaコードを生成したはずのディレクトリを覗いてみると確かに `basic/LittleBasicBaseVisitor.java` ファイルがありません。
 
-<img src="https://kazurayam.github.io/littlebasic/images/generatedGrammarSource_without_visitor.png" alt="without_visitor" width="756" height="1086">
+<img src="https://kazurayam.github.io/littlebasic/images/generatedGrammarSource_without_visitor.png" alt="without_visitor" width="264" height="379">
 
 公式ドキュメント [ANTLR Tool Command Line Options](https://chromium.googlesource.com/external/github.com/antlr/antlr4/+/15720d1e33d7e03b2ca22f65f9260cfefae46505/doc/tool-options.md) にこう書いてありました。
 
