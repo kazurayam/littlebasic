@@ -294,7 +294,7 @@ ANTLRが文法からJavaコードを生成する処理は静かに完了した�
 
 ANTLRがJavaコードを生成したはずのディレクトリを覗いてみると確かに `basic/LittleBasicBaseVisitor.java` ファイルがありません。
 
-![without-visitor](https://kazurayam.github.io/littlebasic/images/generatedGrammarSource_without_visitor.png]
+![without-visitor](https://kazurayam.github.io/littlebasic/images/generatedGrammarSource_without_visitor.png)
 
 公式ドキュメント [ANTLR Tool Command Line Options](https://chromium.googlesource.com/external/github.com/antlr/antlr4/+/15720d1e33d7e03b2ca22f65f9260cfefae46505/doc/tool-options.md) にこう書いてありました。
 
@@ -305,7 +305,7 @@ ANTLRに`basic/LittleBasicBaseVisitor.java`ファイルを生成させたけれ�
 
 ## 結論
 
-ANTLRを使ってBASIC言語の処理系をJavaで作ることができました。わたしは次にVBAすなわちMicrosoft ExcelのVisual Basic for Applicationのソースコードを解析するプログラムをJavaで作ってみようと思う。Excel VBAで仕事していて困り果てることが色々あってなんとかしたいから自助ツールを作りたい。さてどこまでできるやら。
+ANTLRを使ってBASIC言語の処理系をJavaで作ることができました。わたしは次にVBAすなわちMicrosoft ExcelのVisual Basic for Applicationのソースコードを解析するプログラムをJavaで作ってみようと思う。Excel VBAで仕事していて困り果てたことが多々ある。VBAパーサとそれに基づく解析ツールを作れば良くなるかもしれないと思うから。さてどこまでできるやら。
 
 
 
