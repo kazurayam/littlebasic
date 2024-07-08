@@ -8,12 +8,9 @@
 この記事は[BASIC](https://ja.wikipedia.org/wiki/BASIC)言語のインタープレターをJava言語で実装した事例である。
 BASIC言語の文法を記述したファイルをパーサー・ジェネレータ[ANTLR](https://www.antlr.org/)に与える。
 ANTLRがパーサを構成するJavaコードを生成する。
-自動生成されたコードを利用する形でインタープレタをJava言語で実装している。ビルドツールGradleを用いている。 
+自動生成されたコードを利用する形でインタープレタをJava言語で実装している。Mavenでビルドしている。 
 
-わたしはこの記事が紹介するJavaコードを写経して動かしてみた。
-そのコードはよくできていてほとんど修正不要だった。
-しかし細かいところで問題がいくつかあった。
-わたしが見つけた解決方法を記述し公開しようと思う。
+わたしはこの記事が紹介するJavaコードを写経して動かしてみた。 そのコードはよくできていてほとんど修正不要だった。しかし細かいところで問題がいくつかあった。わたしが見つけた解決方法を記述し公開しようと思う。
 
 ## 前提条件
 
@@ -52,7 +49,7 @@ jarファイルができたらBASICインタープレターを実行する用意
 
 サンプルとしてのBASICプログラムがひとつzipの中に含まれている。
 
-- [littlebasic/app/src/test/fixtures/RunGCD.bas](https://github.com/kazurayam/littlebasic/blob/master/app/src/test/fixtures/RunGCD.bas)
+- [littlebasic/app/src/test/fixtures/runGCD.bas](https://github.com/kazurayam/littlebasic/blob/master/app/src/test/fixtures/runGCD.bas)
 
 ```
 REM Greatest common divisor
@@ -70,8 +67,7 @@ END
 PRINT "GCD=" + a
 ```
 
-このBASICプログラムを起動すると、変数Aに数値を指定してねと要求してくる。Aに数値を指定すると、続いて変数Bにも数値を指定してねと要求してくる。Bに数値を指定すると演算が実行され、Greatest Common Divisor
-すなわちAとBの最大公約数が表示される。
+このBASICプログラムを起動すると、変数Aに数値を指定せよと要求してくる。Aに数値を指定すると、続いて変数Bにも数値を指定せよと要求してくる。Bに数値を指定すると演算が実行され、Greatest Common Divisor すなわちAとBの最大公約数が表示される。
 
 ターミナルのウインドウで実際にどういう操作をすれば、どういう結果が返ってくるか、いくつか実例を示そう。
 
@@ -158,9 +154,7 @@ public class App {
 
 ## 疑問点と解消法
 
-今回、わたしが遭遇した疑問点とその解消法を説明しましょう。それは
-Gradleビルドファイル [app/build.gradle](https://github.com/kazurayam/littlebasic/blob/develop/app/build.gradle) のなかの
-次の記述に集約されています。
+今回、わたしが遭遇した疑問点とその解消法を説明しましょう。それはGradleビルドファイル [app/build.gradle](https://github.com/kazurayam/littlebasic/blob/develop/app/build.gradle) のなかの次の記述に集約されています。
 
 ```
 plugins {
@@ -303,9 +297,21 @@ ANTLRがJavaコードを生成したはずのディレクトリを覗いてみ�
 
 ANTLRに`basic/LittleBasicBaseVisitor.java`ファイルを生成させたければ `-visitor` オプションを明示的に指定する必要がある、のでした。
 
+### なぜわたしは問題に遭遇したのか
+
+わたしの[littlebasic](https://github.com/kazurayam/littlebasic)プロジェクトはGradleでビルドを記述しました。やってみると`generateGrammarSouce`タスクで問題に遭遇した。ANTLRコマンドに対して適切なオプションを指定してやる必要があった。
+
+一方的、本家の[littlebasic](https://github.com/mateiw/littlebasic/tree/master)プロジェクトはMavenでビルドしていた。[`ANTLR 4 Maven plugin`](https://www.antlr.org/api/maven-plugin/latest/examples/simple.html)を使っていた。
+
+Mavenでビルドするのと同じ結果を得るために、Gradleではほんの少し、手間を加える必要があった、ということなんだろうと思う。
+
+
+
 ## 結論
 
-ANTLRを使ってBASIC言語の処理系をJavaで作ることができました。わたしは次にVBAすなわちMicrosoft ExcelのVisual Basic for Applicationのソースコードを解析するプログラムをJavaで作ってみようと思う。Excel VBAで仕事していて困り果てたことが多々ある。VBAパーサとそれに基づく解析ツールを作れば解決できる課題もあると考えているから。さてどこまでできるやら。
+ANTLRを使ってBASIC言語の処理系をJavaで作ることができました。わたしは次にVBAすなわちMicrosoft ExcelのVisual Basic for Applicationのソースコードを解析するプログラムをJavaで作ってみようと思う。Excel VBAで仕事していて困り果てたことが多々ある。VBAパーサを作りそれを活用する解析ツールを開発すればわたしの困惑をきっと解消できるから。さてどこまでできるやら。
+
+
 
 
 
